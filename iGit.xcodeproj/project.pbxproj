@@ -11,6 +11,8 @@
 		A30419932B45BBAD009E4937 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419922B45BBAD009E4937 /* Line.swift */; };
 		A30419952B45BC28009E4937 /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419942B45BC28009E4937 /* Circle.swift */; };
 		A30419972B45BC8C009E4937 /* RoundedRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419962B45BC8C009E4937 /* RoundedRectangle.swift */; };
+		A30419992B45C008009E4937 /* GraphInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419982B45C008009E4937 /* GraphInfo.swift */; };
+		A304199B2B45C4CF009E4937 /* GraphCommitInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A304199A2B45C4CF009E4937 /* GraphCommitInfo.swift */; };
 		A35783282B3B636900C11058 /* iGit.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A35783272B3B636900C11058 /* iGit.xcconfig */; };
 		A357832A2B3B6D5F00C11058 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35783292B3B6D5F00C11058 /* ViewController.swift */; };
 		A36224BD2B3B5A6A00DE8A0F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36224BC2B3B5A6A00DE8A0F /* AppDelegate.swift */; };
@@ -25,6 +27,8 @@
 		A30419922B45BBAD009E4937 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		A30419942B45BC28009E4937 /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
 		A30419962B45BC8C009E4937 /* RoundedRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectangle.swift; sourceTree = "<group>"; };
+		A30419982B45C008009E4937 /* GraphInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphInfo.swift; sourceTree = "<group>"; };
+		A304199A2B45C4CF009E4937 /* GraphCommitInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphCommitInfo.swift; sourceTree = "<group>"; };
 		A35783272B3B636900C11058 /* iGit.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = iGit.xcconfig; sourceTree = "<group>"; };
 		A35783292B3B6D5F00C11058 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A36224B92B3B5A6A00DE8A0F /* iGit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iGit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,6 +83,8 @@
 				A36224BC2B3B5A6A00DE8A0F /* AppDelegate.swift */,
 				A36224BE2B3B5A6A00DE8A0F /* SceneDelegate.swift */,
 				A35783292B3B6D5F00C11058 /* ViewController.swift */,
+				A30419982B45C008009E4937 /* GraphInfo.swift */,
+				A304199A2B45C4CF009E4937 /* GraphCommitInfo.swift */,
 				A30419922B45BBAD009E4937 /* Line.swift */,
 				A30419942B45BC28009E4937 /* Circle.swift */,
 				A30419962B45BC8C009E4937 /* RoundedRectangle.swift */,
@@ -185,12 +191,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A30419992B45C008009E4937 /* GraphInfo.swift in Sources */,
 				A30419952B45BC28009E4937 /* Circle.swift in Sources */,
 				A30419972B45BC8C009E4937 /* RoundedRectangle.swift in Sources */,
 				A357832A2B3B6D5F00C11058 /* ViewController.swift in Sources */,
 				A30419932B45BBAD009E4937 /* Line.swift in Sources */,
 				A36224BD2B3B5A6A00DE8A0F /* AppDelegate.swift in Sources */,
 				A36224BF2B3B5A6A00DE8A0F /* SceneDelegate.swift in Sources */,
+				A304199B2B45C4CF009E4937 /* GraphCommitInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
