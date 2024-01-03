@@ -9,6 +9,13 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    // Horizontal distance of commit points
+    let dist_x: Int = 40
+    
+    // Vertical distance of commit points
+    let dist_y: Int = 80
+    
+    
     // Draw a line connecting commits
     func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
         let line = Line(frame: self.view.frame, start: start, end: end, color: color, weight: 1.8)
@@ -26,6 +33,15 @@ class ViewController: UIViewController {
         let rectangleSize = CGSize(width: 30, height: 30)
         let roundedRectAngle = RoundedRectangle(frame: self.view.frame, rect: CGRect(origin: point, size: rectangleSize), cornarRadius: 3.0, innerColor: .clear, lineColer: color, lineWiidth: 2.0)
         self.view.addSubview(roundedRectAngle)
+    }
+    
+    // Draw a commit
+    func drawCommit(graphCommitInfo info: GraphCommitInfo) {
+        
+        let commitPointPosition = CGPoint(x: info.point_x + dist_x, y: info.point_y * dist_y)
+        let commitInfoPosition = commitPointPosition + CGPoint(x: 0, y: 200)
+        
+        drawCommitPoint(point: commitPointPosition, color: info.color)
     }
     
     // Called when "Select folder" button is pushed
