@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zVp-vu-zLD">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -9,34 +9,51 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Navigation Controller-->
+        <scene sceneID="EvF-k1-GIJ">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="iGit" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                <navigationController id="zVp-vu-zLD" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="NZn-mV-wFL">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Gjb-H2-SO6" kind="relationship" relationship="rootViewController" id="upB-O4-kgX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pXi-Fr-K4R" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1031" y="15"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="0oQ-mv-KNp">
+            <objects>
+                <viewController id="Gjb-H2-SO6" customClass="ViewController" customModule="iGit" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="w5g-VN-8F4">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rpj-k5-8aX">
-                                <rect key="frame" x="136" y="408.66666666666669" width="121" height="35"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DLp-CC-hwv">
+                                <rect key="frame" x="136.33333333333334" y="408.66666666666669" width="120.33333333333334" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Select folder"/>
                                 <connections>
-                                    <action selector="showDocumentPicker:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1kT-QB-hhn"/>
+                                    <action selector="showDocumentPicker:" destination="Gjb-H2-SO6" eventType="touchUpInside" id="9Fm-uO-mja"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <viewLayoutGuide key="safeArea" id="lKy-QP-Kk4"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Rpj-k5-8aX" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="xPT-rm-eNz"/>
-                            <constraint firstItem="Rpj-k5-8aX" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xfm-IT-6P2"/>
+                            <constraint firstItem="DLp-CC-hwv" firstAttribute="centerY" secondItem="w5g-VN-8F4" secondAttribute="centerY" id="0Hv-Yv-vpB"/>
+                            <constraint firstItem="DLp-CC-hwv" firstAttribute="centerX" secondItem="w5g-VN-8F4" secondAttribute="centerX" id="Fkv-rI-mZh"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="lTn-C4-3W9"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wnc-hk-Fyl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="-2"/>
+            <point key="canvasLocation" x="1979" y="15"/>
         </scene>
     </scenes>
     <resources>
