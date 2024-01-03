@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		A30419902B45BAAE009E4937 /* SwiftGit2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A304198F2B45BAAE009E4937 /* SwiftGit2.framework */; };
 		A30419932B45BBAD009E4937 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419922B45BBAD009E4937 /* Line.swift */; };
+		A30419952B45BC28009E4937 /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419942B45BC28009E4937 /* Circle.swift */; };
 		A35783282B3B636900C11058 /* iGit.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = A35783272B3B636900C11058 /* iGit.xcconfig */; };
 		A357832A2B3B6D5F00C11058 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35783292B3B6D5F00C11058 /* ViewController.swift */; };
 		A36224BD2B3B5A6A00DE8A0F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36224BC2B3B5A6A00DE8A0F /* AppDelegate.swift */; };
@@ -21,6 +22,7 @@
 /* Begin PBXFileReference section */
 		A304198F2B45BAAE009E4937 /* SwiftGit2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGit2.framework; path = Carthage/Build/iOS/SwiftGit2.framework; sourceTree = "<group>"; };
 		A30419922B45BBAD009E4937 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		A30419942B45BC28009E4937 /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
 		A35783272B3B636900C11058 /* iGit.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = iGit.xcconfig; sourceTree = "<group>"; };
 		A35783292B3B6D5F00C11058 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A36224B92B3B5A6A00DE8A0F /* iGit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iGit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +78,7 @@
 				A36224BE2B3B5A6A00DE8A0F /* SceneDelegate.swift */,
 				A35783292B3B6D5F00C11058 /* ViewController.swift */,
 				A30419922B45BBAD009E4937 /* Line.swift */,
+				A30419942B45BC28009E4937 /* Circle.swift */,
 				A36224C22B3B5A6A00DE8A0F /* Main.storyboard */,
 				A36224C52B3B5A6C00DE8A0F /* Assets.xcassets */,
 				A36224C72B3B5A6C00DE8A0F /* LaunchScreen.storyboard */,
@@ -179,6 +182,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A30419952B45BC28009E4937 /* Circle.swift in Sources */,
 				A357832A2B3B6D5F00C11058 /* ViewController.swift in Sources */,
 				A30419932B45BBAD009E4937 /* Line.swift in Sources */,
 				A36224BD2B3B5A6A00DE8A0F /* AppDelegate.swift in Sources */,
