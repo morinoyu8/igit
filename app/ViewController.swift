@@ -38,7 +38,7 @@ class ViewController: UIViewController {
     // Draw a commit
     func drawCommit(graphCommitInfo info: GraphCommitInfo) {
         
-        let commitPointPosition = CGPoint(x: info.point_x + dist_x, y: info.point_y * dist_y)
+        let commitPointPosition = CGPoint(x: info.depth_x + dist_x, y: info.depth_y * dist_y)
         let commitInfoPosition = commitPointPosition + CGPoint(x: 0, y: 200)
         
         drawCommitPoint(point: commitPointPosition, color: info.color)

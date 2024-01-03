@@ -13,8 +13,8 @@ class GraphCommitInfo: GraphInfo {
     // CommitID
     let oid: OID
     
-    init(oid: OID, point_x: Int, point_y: Int, color: UIColor) {
+    init(oid: OID, depth_x: Int, depth_y: Int, color: UIColor) {
         self.oid = oid
-        super.init(point_x: point_x, point_y: point_y, color: color)
+        super.init(depth_x: depth_x, depth_y: depth_y, color: color)
     }
 }

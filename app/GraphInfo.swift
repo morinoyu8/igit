@@ -9,10 +9,10 @@ import UIKit
 
 class GraphInfo {
     
-    // The point of the vertical axis of the graph.
+    // The depth of the horizontal axis of the graph.
     // On the commit graph, the value increases when a new branch is introduced.
     //
-    // ex) point_y of A = 0, point_y of B = 1 and point_y of C = 0, if
+    // ex) depth_x of A = 0, depth_x of B = 1 and depth_x of C = 0, if
     //
     //     * (A)
     //     | \
@@ -20,12 +20,12 @@ class GraphInfo {
     //     | /
     //     * (C)
     //
-    let point_x: Int
+    let depth_x: Int
     
-    // The point of the vertical axis of the graph.
+    // The depth of the vertical axis of the graph.
     // On the commit graph, the order increases from newest to oldest.
     //
-    // ex) point_y of A = 0, point_y of B = 1 and point_y of C = 2, if
+    // ex) depth_y of A = 0, depth_y of B = 1 and depth_y of C = 2, if
     //
     //     * (A)
     //     | \
@@ -33,14 +33,14 @@ class GraphInfo {
     //     | /
     //     * (C)
     //
-    let point_y: Int
+    let depth_y: Int
     
     // The color of this graph.
     let color: UIColor
     
-    init(point_x: Int, point_y: Int, color: UIColor) {
-        self.point_x = point_x
-        self.point_y = point_y
+    init(depth_x: Int, depth_y: Int, color: UIColor) {
+        self.depth_x = depth_x
+        self.depth_y = depth_y
         self.color = color
     }
 }
