@@ -9,6 +9,18 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    // View to display a git graph
+    @IBOutlet weak var contentView: UIView!
+    
+    // Width of contentView
+    @IBOutlet weak var contentViewWidth: NSLayoutConstraint!
+    
+    // Height of contentView
+    @IBOutlet weak var contentViewHeight: NSLayoutConstraint!
+    
+    // It must be the same value as contentViewHeight
+    @IBOutlet weak var scrollViewHeight: NSLayoutConstraint!
+    
     // Horizontal distance of commit points
     let dist_x: Int = 40
     
@@ -42,6 +54,12 @@ class ViewController: UIViewController {
         let commitInfoPosition = commitPointPosition + CGPoint(x: 0, y: 200)
         
         drawCommitPoint(point: commitPointPosition, color: info.color)
+    }
+    
+    func setContentViewSize(size: CGSize) {
+        contentViewWidth.constant = size.width
+        contentViewHeight.constant = size.height
+        scrollViewHeight.constant = size.height
     }
     
     // Called when "Select folder" button is pushed
