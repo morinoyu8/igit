@@ -5,7 +5,10 @@
 //  Created by morinoyu8 on 2023/12/27.
 //
 
+import Foundation
 import UIKit
+import SwiftGit2
+import Clibgit2
 
 class ViewController: UIViewController {
     
@@ -27,6 +30,27 @@ class ViewController: UIViewController {
     // Vertical distance of commit points
     let dist_y: Int = 80
     
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let fileManager = FileManager.default
+        do {
+
+            let fromURL = URL(string: "https://github.com/morinoyu8/glab.git")!
+            let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let toURL = documentsURL.appendingPathComponent("git-test", isDirectory: true)
+            
+            if fileManager.fileExists(atPath: toURL.path, isDirectory: nil) {
+                try fileManager.removeItem(at: toURL)
+            }
+            
+            let result = Repository.clone(from: fromURL, to: toURL)
+
+        } catch {
+            print("ERROR: \(error)")
+        }
+    }
     
     // Draw a line connecting commits
     func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
@@ -62,6 +86,51 @@ class ViewController: UIViewController {
         scrollViewHeight.constant = size.height
     }
     
+    
+    func iterateCommit(repo: Repository) -> [GraphInfo] {
+        
+        let head = repo.HEAD().flatMap { repo.commit($0.oid) }
+        var infos: [GraphInfo] = []
+        switch head {
+        case let .success(commit):
+            print("Latest Commit: \(commit.message) by \(commit.author.name)")
+            let latestCommit = GraphCommitInfo(oid: commit.oid, depth_x: 0, depth_y: 0, color: .red)
+            infos.append(latestCommit)
+            
+            // Commit iterator
+            let iter = CommitIterator(repo: repo, root: commit.oid.oid)
+            let result: SwiftGit2.CommitIterator.Element?
+            
+            //
+            while (true) {
+                let result = iter.next()
+                if result == nil {
+                    print("result nil")
+                    break
+                }
+                
+                switch result {
+                case let .success(commit):
+                    print("Commit: \(commit.message)")
+                    
+                case let .failure(error):
+                    print("Commit itrator error: \(error)")
+                    return []
+                case .none:
+                    print("result nil")
+                    break
+                }
+            }
+
+        case let .failure(error):
+            print("Could not get head: \(error)")
+            return []
+        }
+        
+        return infos
+    }
+    
+    
     // Called when "Select folder" button is pushed
     @IBAction func showDocumentPicker(_ sender: Any) {
         let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [.folder])
@@ -75,7 +144,23 @@ extension ViewController: UIDocumentPickerDelegate {
     
     // Called when a folder selected
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        guard let url = urls.first else { return }
-        print(url)
+        
+        let fileManager = FileManager.default
+        do {
+            let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let URL = documentsURL.appendingPathComponent("git-test", isDirectory: true)
+            let result = Repository.at(URL)
+    
+            switch result {
+            case let .success(repo):
+                let a = iterateCommit(repo: repo)
+    
+            case let .failure(error):
+                print("Could not open repository: \(error)")
+            }
+            
+        } catch {
+            print("ERROR: \(error)")
+        }
     }
 }
