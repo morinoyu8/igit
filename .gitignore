@@ -19,3 +19,7 @@ fastlane/test_output
 
 e2e_out/
 .DS_Store
+
+Cartfile
+Cartfile.resolved
+Carthage
