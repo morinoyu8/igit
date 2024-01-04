@@ -10,11 +10,11 @@ import SwiftGit2
 
 class GraphCommitInfo: GraphInfo {
     
-    // CommitID
-    let oid: OID
+    // Commit
+    let commit: Commit
     
-    init(oid: OID, depth_x: Int, depth_y: Int, color: UIColor) {
-        self.oid = oid
+    init(commit: Commit, depth_x: Int, depth_y: Int, color: UIColor) {
+        self.commit = commit
         super.init(depth_x: depth_x, depth_y: depth_y, color: color)
     }
 }
