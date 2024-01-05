@@ -24,6 +24,8 @@ class ViewController: UIViewController {
     // It must be the same value as contentViewHeight
     @IBOutlet weak var scrollViewHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var headerTitle: UINavigationItem!
+    
     // Horizontal distance of commit points
     let dist_x: Int = 40
     
@@ -186,6 +188,7 @@ class ViewController: UIViewController {
                 for subview in self.contentView.subviews {
                     subview.removeFromSuperview()
                 }
+                headerTitle.title = inputText.components(separatedBy: "/").last?.components(separatedBy: ".").first ?? ""
                 let infos = iterateCommit(repo: repo)
                 drawGraph(graphInfos: infos)
             case let .failure(error):

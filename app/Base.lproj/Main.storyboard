@@ -108,6 +108,7 @@
                         <outlet property="contentView" destination="zqF-V1-Vua" id="eUH-hr-Vbs"/>
                         <outlet property="contentViewHeight" destination="xEo-nO-57S" id="4NL-Up-IyN"/>
                         <outlet property="contentViewWidth" destination="eSz-3A-kpC" id="cMx-eH-kte"/>
+                        <outlet property="headerTitle" destination="lTn-C4-3W9" id="reB-0o-dfD"/>
                         <outlet property="scrollViewHeight" destination="Fqq-Ap-h4I" id="BJ0-bs-pW5"/>
                     </connections>
                 </viewController>
