@@ -82,7 +82,7 @@ class ViewController: UIViewController {
         date.text = "Date: \(info.commit.author.time.description)"
         message.text = info.commit.message
         
-        let fontSize: CGFloat = 16
+        let fontSize: CGFloat = 14
         id.font = UIFont(name: "Menlo-Regular", size: fontSize)
         author.font = UIFont(name: "Menlo-Regular", size: fontSize)
         date.font = UIFont(name: "Menlo-Regular", size: fontSize)
