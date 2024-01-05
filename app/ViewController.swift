@@ -31,27 +31,6 @@ class ViewController: UIViewController {
     let dist_y: Int = 80
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let fileManager = FileManager.default
-        do {
-
-            let fromURL = URL(string: "https://github.com/morinoyu8/glab.git")!
-            let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            let toURL = documentsURL.appendingPathComponent("git-test", isDirectory: true)
-            
-            if fileManager.fileExists(atPath: toURL.path, isDirectory: nil) {
-                try fileManager.removeItem(at: toURL)
-            }
-            
-            let result = Repository.clone(from: fromURL, to: toURL)
-
-        } catch {
-            print("ERROR: \(error)")
-        }
-    }
-    
     // Draw a line connecting commits
     func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
         let line = Line(frame: self.view.frame, start: start, end: end, color: color, weight: 1.8)
@@ -181,52 +160,65 @@ class ViewController: UIViewController {
         return infos
     }
     
-    
-    // Called when "Select folder" button is pushed
-    @IBAction func showDocumentPicker(_ sender: Any) {
+    func cloneAndGetRepository(inputText: String) {
         let fileManager = FileManager.default
         do {
+            guard let fromURL = URL(string: inputText) else { return }
             let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            let URL = documentsURL.appendingPathComponent("git-test", isDirectory: true)
-            let result = Repository.at(URL)
-    
-            switch result {
-            case let .success(repo):
-                let graphInfos = iterateCommit(repo: repo)
-                drawGraph(graphInfos: graphInfos)
-    
-            case let .failure(error):
-                print("Could not open repository: \(error)")
+            let toURL = documentsURL.appendingPathComponent("git-test", isDirectory: true)
+            
+            if fileManager.fileExists(atPath: toURL.path, isDirectory: nil) {
+                try fileManager.removeItem(at: toURL)
             }
             
+            let result = Repository.clone(from: fromURL, to: toURL)
+            switch result {
+            case let .success(repo):
+                for subview in self.contentView.subviews {
+                    subview.removeFromSuperview()
+                }
+                let infos = iterateCommit(repo: repo)
+                drawGraph(graphInfos: infos)
+            case let .failure(error):
+                print("error: \(error)")
+            }
+
         } catch {
-            print("ERROR: \(error)")
+            print("error: \(error)")
         }
     }
-}
-
-extension ViewController: UIDocumentPickerDelegate {
     
-    // Called when a folder selected
-//    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-//        
-//        let fileManager = FileManager.default
-//        do {
-//            let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-//            let URL = documentsURL.appendingPathComponent("git-test", isDirectory: true)
-//            let result = Repository.at(URL)
-//    
-//            switch result {
-//            case let .success(repo):
-//                let graphInfos = iterateCommit(repo: repo)
-//                drawGraph(graphInfos: graphInfos)
-//    
-//            case let .failure(error):
-//                print("Could not open repository: \(error)")
-//            }
-//            
-//        } catch {
-//            print("ERROR: \(error)")
-//        }
-//    }
+    
+    // Called when "Repo" button is pushed
+    @IBAction func showAlertForNewRepository(_ sender: Any) {
+        var alertTextField: UITextField?
+
+        let alert = UIAlertController(
+            title: "Show Commit Log",
+            message: "Enter remote git URL",
+            preferredStyle: UIAlertController.Style.alert)
+    
+        alert.addTextField(
+            configurationHandler: {(textField: UITextField!) in
+                alertTextField = textField
+        })
+    
+        alert.addAction(
+            UIAlertAction(
+                title: "Cancel",
+                style: UIAlertAction.Style.cancel,
+                handler: nil))
+    
+        alert.addAction(
+            UIAlertAction(
+                title: "OK",
+                style: UIAlertAction.Style.default) { _ in
+                    if let text = alertTextField?.text {
+                        self.cloneAndGetRepository(inputText: text)
+                    }
+                }
+        )
+
+        self.present(alert, animated: true, completion: nil)
+    }
 }

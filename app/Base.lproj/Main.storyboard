@@ -80,27 +80,30 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="XzM-5g-uCf"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="0WX-w5-3t4"/>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DLp-CC-hwv">
-                                <rect key="frame" x="136.33333333333334" y="408.66666666666669" width="120.33333333333334" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Select folder"/>
-                                <connections>
-                                    <action selector="showDocumentPicker:" destination="Gjb-H2-SO6" eventType="touchUpInside" id="9Fm-uO-mja"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="lKy-QP-Kk4"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="DLp-CC-hwv" firstAttribute="centerY" secondItem="w5g-VN-8F4" secondAttribute="centerY" id="0Hv-Yv-vpB"/>
-                            <constraint firstItem="DLp-CC-hwv" firstAttribute="centerX" secondItem="w5g-VN-8F4" secondAttribute="centerX" id="Fkv-rI-mZh"/>
                             <constraint firstItem="lKy-QP-Kk4" firstAttribute="trailing" secondItem="w9B-6I-ULW" secondAttribute="trailing" id="H6N-W4-07d"/>
                             <constraint firstItem="w9B-6I-ULW" firstAttribute="leading" secondItem="lKy-QP-Kk4" secondAttribute="leading" id="dld-hI-rct"/>
                             <constraint firstItem="lKy-QP-Kk4" firstAttribute="bottom" secondItem="w9B-6I-ULW" secondAttribute="bottom" id="hcP-xf-mWh"/>
                             <constraint firstItem="w9B-6I-ULW" firstAttribute="top" secondItem="lKy-QP-Kk4" secondAttribute="top" id="usO-2R-S7y"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="lTn-C4-3W9"/>
+                    <navigationItem key="navigationItem" id="lTn-C4-3W9">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="ZoV-WT-EZT">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="DLp-CC-hwv">
+                                <rect key="frame" x="16.000000000000004" y="4.6666666666666679" width="63.333333333333343" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration" label="R"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Repo"/>
+                                <connections>
+                                    <action selector="showAlertForNewRepository:" destination="Gjb-H2-SO6" eventType="touchUpInside" id="ge7-Na-8RE"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="contentView" destination="zqF-V1-Vua" id="eUH-hr-Vbs"/>
                         <outlet property="contentViewHeight" destination="xEo-nO-57S" id="4NL-Up-IyN"/>
