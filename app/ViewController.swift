@@ -39,32 +39,32 @@ class ViewController: UIViewController {
     
     
     // Draw a line connecting commits
-    func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
-        let line = Line(frame: self.view.frame, start: start, end: end, color: color, weight: 1.8)
-        contentView.addSubview(line)
-    }
+    // func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
+    //     let line = Line(frame: self.view.frame, start: start, end: end, color: color, weight: 1.8)
+    //     contentView.addSubview(line)
+    // }
     
     // Draw a commit point
-    func drawCommitPoint(point: CGPoint, color: UIColor) {
-        let circle = Circle(frame: self.view.frame, arcCenter: point, radius: 5, color: color)
-        contentView.addSubview(circle)
-    }
+    // func drawCommitPoint(point: CGPoint, color: UIColor) {
+    //     let circle = Circle(frame: self.view.frame, arcCenter: point, radius: 5, color: color)
+    //     contentView.addSubview(circle)
+    // }
     
     // Draw a frame for commit information
-    func drawCommitInfoFrame(point: CGPoint, color: UIColor) {
-        let rectangleSize = CGSize(width: 30, height: 30)
-        let roundedRectAngle = RoundedRectangle(frame: self.view.frame, rect: CGRect(origin: point, size: rectangleSize), cornarRadius: 3.0, innerColor: .clear, lineColer: color, lineWiidth: 2.0)
-        contentView.addSubview(roundedRectAngle)
-    }
+    // func drawCommitInfoFrame(point: CGPoint, color: UIColor) {
+    //     let rectangleSize = CGSize(width: 30, height: 30)
+    //     let roundedRectAngle = RoundedRectangle(frame: self.view.frame, rect: CGRect(origin: point, size: rectangleSize), cornarRadius: 3.0, innerColor: .clear, lineColer: color, lineWiidth: 2.0)
+    //     contentView.addSubview(roundedRectAngle)
+    // }
     
     // Draw a commit
-    func drawCommit(graphCommitInfo info: GraphCommitInfo) {
+    // func drawCommit(graphCommitInfo info: GraphCommitInfo) {
         
-        let commitPointPosition = CGPoint(x: info.depth_x + dist_x, y: info.depth_y * dist_y)
-        let commitInfoPosition = commitPointPosition + CGPoint(x: 0, y: 200)
+    //     let commitPointPosition = CGPoint(x: info.depth_x + dist_x, y: info.depth_y * dist_y)
+    //     let commitInfoPosition = commitPointPosition + CGPoint(x: 0, y: 200)
         
-        drawCommitPoint(point: commitPointPosition, color: info.color)
-    }
+    //     drawCommitPoint(point: commitPointPosition, color: info.color)
+    // }
     
     func drawCommitInfoText(graphCommitInfo info: GraphCommitInfo) {
         let basePoint_x = info.depth_x * 50 + 20
