@@ -30,6 +30,13 @@ class ViewController: UIViewController {
     // Vertical distance of commit points
     let dist_y: Int = 80
     
+    enum RepositoryError {
+        case clone
+        case getDocument
+        case getReposiitoryHead
+        case iterateCommits
+    }
+    
     
     // Draw a line connecting commits
     func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
@@ -144,6 +151,7 @@ class ViewController: UIViewController {
                     infos.append(commitInfo)
                     
                 case let .failure(error):
+                    showErrorAlert(repoError: .iterateCommits)
                     print("Commit itrator error: \(error)")
                     return []
                 case .none:
@@ -153,6 +161,7 @@ class ViewController: UIViewController {
             }
 
         case let .failure(error):
+            showErrorAlert(repoError: .getReposiitoryHead)
             print("Could not get head: \(error)")
             return []
         }
@@ -180,12 +189,41 @@ class ViewController: UIViewController {
                 let infos = iterateCommit(repo: repo)
                 drawGraph(graphInfos: infos)
             case let .failure(error):
+                showErrorAlert(repoError: .clone)
                 print("error: \(error)")
             }
 
         } catch {
+            showErrorAlert(repoError: .getDocument)
             print("error: \(error)")
         }
+    }
+    
+    func showErrorAlert(repoError err: RepositoryError) {
+        var message: String = "Error"
+        switch err {
+        case .clone:
+            message = "Failed to clone repository"
+        case .getDocument:
+            message = "Failed to get app document folder"
+        case .getReposiitoryHead:
+            message = "Failed to get repository HEAD"
+        case .iterateCommits:
+            message = "Failed to iterate commits"
+        }
+        
+        let alert = UIAlertController(
+            title: "Error",
+            message: message,
+            preferredStyle: UIAlertController.Style.alert)
+    
+        alert.addAction(
+            UIAlertAction(
+                title: "OK",
+                style: UIAlertAction.Style.cancel,
+                handler: nil))
+        
+        self.present(alert, animated: true, completion: nil)
     }
     
     
