@@ -131,16 +131,8 @@ class ViewController: UIViewController {
             
             var currentDepth_y = 0
             
-            
-            // Operate for HEAD
-            print("Latest Commit: \(commit.message) by \(commit.author.name)")
-            let latestCommitInfo = GraphCommitInfo(commit: commit, depth_x: 0, depth_y: 0, color: .red)
-            infos.append(latestCommitInfo)
-            
-            
             //
             while (true) {
-                currentDepth_y += 1
                 let result = iter.next()
                 if result == nil {
                     break
@@ -160,6 +152,8 @@ class ViewController: UIViewController {
                     print("result nil")
                     return infos
                 }
+                
+                currentDepth_y += 1
             }
 
         case let .failure(error):
