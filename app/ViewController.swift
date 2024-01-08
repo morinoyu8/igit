@@ -42,7 +42,9 @@ class ViewController: UIViewController {
     
      // Draw a line connecting commits
      func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
-         let line = Line(frame: self.view.frame, start: start, end: end, color: color, weight: 1.8)
+         let mergin = CGPoint(x: 5, y: 5)
+         let size = end - start + mergin * 2
+         let line = Line(frame: CGRect(origin: start - mergin, size: CGSize(width: size.x, height: size.y)), start: .zero + mergin, end: size - mergin, color: color, weight: 1.8)
          contentView.addSubview(line)
      }
     
@@ -86,6 +88,7 @@ class ViewController: UIViewController {
         message.text = info.commit.message
         
         drawCommitPoint(point: CGPoint(x: basePoint_x - 10, y: basePoint_y + 50), color: .red)
+        drawLine(start: CGPoint(x: basePoint_x - 10, y: basePoint_y + 50), end: CGPoint(x: basePoint_x - 10, y: basePoint_y + 250), color: .red)
         
         let fontSize: CGFloat = 14
         id.font = UIFont(name: "Menlo-Regular", size: fontSize)
