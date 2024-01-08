@@ -124,6 +124,27 @@ class ViewController: UIViewController {
         scrollViewHeight.constant = size.height
     }
     
+    func getOid2Branch(repo: Repository) -> [OID: [Branch]] {
+        
+        var oid2Branch: [OID: [Branch]] = [:]
+        let result = repo.references(withPrefix: "")
+        switch result {
+        case let .success(refs):
+            for ref in refs {
+                if let branch = ref as? Branch {
+                    if oid2Branch.keys.contains(branch.oid) {
+                        oid2Branch[branch.oid]?.append(branch)
+                    } else {
+                        oid2Branch[branch.oid] = [branch]
+                    }
+                }
+            }
+        case let .failure(error):
+            print(error)
+        }
+        return oid2Branch
+    }
+    
     
     func iterateCommit(repo: Repository) -> [GraphInfo] {
         
@@ -146,7 +167,7 @@ class ViewController: UIViewController {
                 
                 switch result {
                 case let .success(commit):
-                    print("Commit: \(commit.message)")
+                    // print("Commit: \(commit.message)")
                     let commitInfo = GraphCommitInfo(commit: commit, depth_x: 0, depth_y: currentDepth_y, color: .red)
                     infos.append(commitInfo)
                     
@@ -189,6 +210,8 @@ class ViewController: UIViewController {
                     subview.removeFromSuperview()
                 }
                 headerTitle.title = inputText.components(separatedBy: "/").last?.components(separatedBy: ".").first ?? ""
+                let branches = getOid2Branch(repo: repo)
+                print(branches)
                 let infos = iterateCommit(repo: repo)
                 drawGraph(graphInfos: infos)
             case let .failure(error):
