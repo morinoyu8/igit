@@ -40,33 +40,34 @@ class ViewController: UIViewController {
     }
     
     
-    // Draw a line connecting commits
-    // func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
-    //     let line = Line(frame: self.view.frame, start: start, end: end, color: color, weight: 1.8)
-    //     contentView.addSubview(line)
-    // }
+     // Draw a line connecting commits
+     func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
+         let line = Line(frame: self.view.frame, start: start, end: end, color: color, weight: 1.8)
+         contentView.addSubview(line)
+     }
     
-    // Draw a commit point
-    // func drawCommitPoint(point: CGPoint, color: UIColor) {
-    //     let circle = Circle(frame: self.view.frame, arcCenter: point, radius: 5, color: color)
-    //     contentView.addSubview(circle)
-    // }
+     // Draw a commit point
+     func drawCommitPoint(point: CGPoint, color: UIColor) {
+         let radius = 5
+         let circle = Circle(frame: CGRect(origin: point - CGPoint(x: radius, y: radius), size: CGSize(width: radius * 2, height: radius * 2)), arcCenter: CGPoint(x: radius, y: radius), radius: CGFloat(radius), color: color)
+         contentView.addSubview(circle)
+     }
     
-    // Draw a frame for commit information
-    // func drawCommitInfoFrame(point: CGPoint, color: UIColor) {
-    //     let rectangleSize = CGSize(width: 30, height: 30)
-    //     let roundedRectAngle = RoundedRectangle(frame: self.view.frame, rect: CGRect(origin: point, size: rectangleSize), cornarRadius: 3.0, innerColor: .clear, lineColer: color, lineWiidth: 2.0)
-    //     contentView.addSubview(roundedRectAngle)
-    // }
+     // Draw a frame for commit information
+     func drawCommitInfoFrame(point: CGPoint, color: UIColor) {
+         let rectangleSize = CGSize(width: 30, height: 30)
+         let roundedRectAngle = RoundedRectangle(frame: self.view.frame, rect: CGRect(origin: point, size: rectangleSize), cornarRadius: 3.0, innerColor: .clear, lineColer: color, lineWiidth: 2.0)
+         contentView.addSubview(roundedRectAngle)
+     }
     
-    // Draw a commit
-    // func drawCommit(graphCommitInfo info: GraphCommitInfo) {
+     // Draw a commit
+     func drawCommit(graphCommitInfo info: GraphCommitInfo) {
         
-    //     let commitPointPosition = CGPoint(x: info.depth_x + dist_x, y: info.depth_y * dist_y)
-    //     let commitInfoPosition = commitPointPosition + CGPoint(x: 0, y: 200)
+         let commitPointPosition = CGPoint(x: info.depth_x + dist_x, y: info.depth_y * dist_y)
+         let commitInfoPosition = commitPointPosition + CGPoint(x: 0, y: 200)
         
-    //     drawCommitPoint(point: commitPointPosition, color: info.color)
-    // }
+         drawCommitPoint(point: commitPointPosition, color: info.color)
+     }
     
     func drawCommitInfoText(graphCommitInfo info: GraphCommitInfo) {
         let basePoint_x = info.depth_x * 50 + 20
@@ -83,6 +84,8 @@ class ViewController: UIViewController {
         author.text = "Author: \(info.commit.author.name) <\(info.commit.author.email)>"
         date.text = "Date: \(info.commit.author.time.description)"
         message.text = info.commit.message
+        
+        drawCommitPoint(point: CGPoint(x: basePoint_x - 10, y: basePoint_y + 50), color: .red)
         
         let fontSize: CGFloat = 14
         id.font = UIFont(name: "Menlo-Regular", size: fontSize)
