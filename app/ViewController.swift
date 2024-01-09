@@ -107,7 +107,7 @@ class ViewController: UIViewController {
             }
             drawOneTimeGraph(infos: info, index: i)
         }
-        setContentViewSize(size: CGSize(width: maxOneTimeInfoCount * 50 + 540, height: infos.count * 40 + 200))
+        setContentViewSize(size: CGSize(width: maxOneTimeInfoCount * 50 + 540, height: infos.count * 50 + 200))
     }
     
     func setContentViewSize(size: CGSize) {
