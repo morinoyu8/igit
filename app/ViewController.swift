@@ -211,7 +211,6 @@ class ViewController: UIViewController {
                 }
                 headerTitle.title = inputText.components(separatedBy: "/").last?.components(separatedBy: ".").first ?? ""
                 let branches = getOid2Branch(repo: repo)
-                print(branches)
                 let infos = iterateCommit(repo: repo)
                 drawGraph(graphInfos: infos)
             case let .failure(error):
