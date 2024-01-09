@@ -71,14 +71,40 @@ class ViewController: UIViewController {
          contentView.addSubview(roundedRectAngle)
      }
     
-    func drawCommitText(commit: Commit, depth_x: Int, depth_y: Int) {
+    func drawCommitText(commitInfo info: GraphCommitInfo, depth_x: Int, depth_y: Int) {
         let width = 500
         let height = 30
-        let message = UILabel(frame: CGRect(origin: CGPoint(x: depth_x * 50 + 50, y: depth_y * 50 + 35), size: CGSize(width: width, height: height)))
-        message.text = commit.message
         let fontSize: CGFloat = 14
+        
+        let message = UILabel(frame: CGRect(origin: CGPoint(x: depth_x * 50 + 50, y: depth_y * 50 + 35), size: CGSize(width: width, height: height)))
         message.font = UIFont(name: "Menlo-Regular", size: fontSize)
-        message.backgroundColor = .white
+        
+        var text = ""
+        var refNameRange: [(Int, Int)] = []
+        if info.branches.count > 0 {
+            text = "( "
+            var refNameLength = 2
+            for (i, branch) in info.branches.enumerated() {
+                text += branch.name
+                refNameRange.append((refNameLength, branch.name.count))
+                refNameLength += branch.name.count + 2
+                
+                if i != info.branches.count - 1 {
+                    text += ", "
+                }
+            }
+            text += " ) "
+        }
+        text += info.commit.message
+        let attrText = NSMutableAttributedString(string: text)
+        for range in refNameRange {
+            attrText.addAttributes([
+                    .foregroundColor: info.color,
+                    .font: UIFont(name: "Menlo-Bold", size: fontSize)!
+            ], range: NSMakeRange(range.0, range.1))
+        }
+
+        message.attributedText = attrText
         contentView.addSubview(message)
         contentView.bringSubviewToFront(message)
     }
@@ -91,7 +117,7 @@ class ViewController: UIViewController {
         for (i, info) in infos.enumerated() {
             if let commitInfo = info as? GraphCommitInfo {
                 drawCommitPoint(point: depth2Position(depth_x: i, depth_y: index), color: info.color)
-                drawCommitText(commit: commitInfo.commit, depth_x: infos.count - 1, depth_y: index)
+                drawCommitText(commitInfo: commitInfo, depth_x: infos.count - 1, depth_y: index)
             }
             for x in info.nextDepth_y {
                 drawLine(start: depth2Position(depth_x: i, depth_y: index), end: depth2Position(depth_x: x, depth_y: index + 1), color: .red)
@@ -153,6 +179,7 @@ class ViewController: UIViewController {
             
             // HEAD initialization
             let head = GraphCommitInfo(commit: commit, nextDepth_y: [0], color: .red)
+            head.branches = branches[commit.oid] ?? []
             infos.append([head])
             
             // Next commit oid of depth_x in the iteration
@@ -186,7 +213,7 @@ class ViewController: UIViewController {
                 
                 switch result {
                 case let .success(commit):
-                    // print("Commit: \(commit.message)")
+                    print("Commit: \(commit.message)")
                     
                     // Add commit infomation
                     var commitDepth_y = -1
@@ -194,7 +221,9 @@ class ViewController: UIViewController {
                         if next.description == commit.oid.description {
                             assert(infos[currentDepth_y].count > i)
                             
-                            infos[currentDepth_y][i] = GraphCommitInfo(commit: commit, nextDepth_y: [i], color: .red)
+                            let new = GraphCommitInfo(commit: commit, nextDepth_y: [i], color: .red)
+                            new.branches = branches[commit.oid] ?? []
+                            infos[currentDepth_y][i] = new
                             commitDepth_y = i
                             break
                         }
@@ -203,6 +232,7 @@ class ViewController: UIViewController {
                     if commitDepth_y < 0 {
                         // Unmerged commit
                         let new = GraphCommitInfo(commit: commit, nextDepth_y: [nexts.count], color: .red)
+                        new.branches = branches[commit.oid] ?? []
                         infos[currentDepth_y].append(new)
                         nexts.append(commit.oid)
                         commitDepth_y = infos[currentDepth_y].count - 1
