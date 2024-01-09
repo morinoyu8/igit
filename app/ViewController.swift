@@ -42,10 +42,19 @@ class ViewController: UIViewController {
     
      // Draw a line connecting commits
      func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
-         let mergin = CGPoint(x: 5, y: 5)
-         let size = end - start + mergin * 2
-         let line = Line(frame: CGRect(origin: start - mergin, size: CGSize(width: size.x, height: size.y)), start: .zero + mergin, end: size - mergin, color: color, weight: 1.8)
+         let mergin: CGFloat = 5
+         let origin = CGPoint(x: min(start.x, end.x) - mergin, y: min(start.y, end.y) - mergin)
+         let size = CGSize(width: max(start.x, end.x) - min(start.x, end.x) + 2 * mergin, height: end.y - start.y + 2 * mergin)
+         var startPoint: CGPoint = CGPoint(x: mergin, y: mergin)
+         var endPoint: CGPoint = CGPoint(x: size.width - mergin, y: size.height - mergin)
+         if end.x - start.x < 0 {
+             startPoint = CGPoint(x: size.width - mergin, y: mergin)
+             endPoint = CGPoint(x: mergin, y: size.height - mergin)
+         }
+         
+         let line = Line(frame: CGRect(origin: origin, size: size), start: startPoint, end: endPoint, color: color, weight: 1.8)
          contentView.addSubview(line)
+         contentView.sendSubviewToBack(line)
      }
     
      // Draw a commit point
@@ -62,60 +71,43 @@ class ViewController: UIViewController {
          contentView.addSubview(roundedRectAngle)
      }
     
-     // Draw a commit
-     func drawCommit(graphCommitInfo info: GraphCommitInfo) {
-        
-         let commitPointPosition = CGPoint(x: info.depth_x + dist_x, y: info.depth_y * dist_y)
-         let commitInfoPosition = commitPointPosition + CGPoint(x: 0, y: 200)
-        
-         drawCommitPoint(point: commitPointPosition, color: info.color)
-     }
-    
-    func drawCommitInfoText(graphCommitInfo info: GraphCommitInfo) {
-        let basePoint_x = info.depth_x * 50 + 20
-        let basePoint_y = info.depth_y * 200 + 20
+    func drawCommitText(commit: Commit, depth_x: Int, depth_y: Int) {
         let width = 500
-        let height = 20
-        
-        let id = UILabel(frame: CGRect(x: basePoint_x, y: basePoint_y, width: width, height: height))
-        let author = UILabel(frame: CGRect(x: basePoint_x, y: basePoint_y + 30, width: width, height: height))
-        let date = UILabel(frame: CGRect(x: basePoint_x, y: basePoint_y + 60, width: width, height: height))
-        let message = UILabel(frame: CGRect(x: basePoint_x + 50, y: basePoint_y + 100, width: width - 50, height: height))
-        
-        id.text = "commit \(info.commit.oid.description)"
-        author.text = "Author: \(info.commit.author.name) <\(info.commit.author.email)>"
-        date.text = "Date: \(info.commit.author.time.description)"
-        message.text = info.commit.message
-        
-        drawCommitPoint(point: CGPoint(x: basePoint_x - 10, y: basePoint_y + 50), color: .red)
-        drawLine(start: CGPoint(x: basePoint_x - 10, y: basePoint_y + 50), end: CGPoint(x: basePoint_x - 10, y: basePoint_y + 250), color: .red)
-        
+        let height = 30
+        let message = UILabel(frame: CGRect(origin: CGPoint(x: depth_x * 50 + 50, y: depth_y * 50 + 35), size: CGSize(width: width, height: height)))
+        message.text = commit.message
         let fontSize: CGFloat = 14
-        id.font = UIFont(name: "Menlo-Regular", size: fontSize)
-        author.font = UIFont(name: "Menlo-Regular", size: fontSize)
-        date.font = UIFont(name: "Menlo-Regular", size: fontSize)
         message.font = UIFont(name: "Menlo-Regular", size: fontSize)
-        
-        contentView.addSubview(id)
-        contentView.addSubview(author)
-        contentView.addSubview(date)
+        message.backgroundColor = .white
         contentView.addSubview(message)
+        contentView.bringSubviewToFront(message)
     }
     
-    func drawGraph(graphInfos infos: [GraphInfo]) {
-        var max_depth_x = 0
-        var max_depth_y = 0
-        for info in infos {
-            if max_depth_x < info.depth_x {
-                max_depth_x = info.depth_x
+    func depth2Position(depth_x: Int, depth_y: Int) -> CGPoint {
+        return CGPoint(x: depth_x * 50 + 20, y: depth_y * 50 + 50)
+    }
+    
+    func drawOneTimeGraph(infos: [GraphInfo], index: Int) {
+        for (i, info) in infos.enumerated() {
+            if let commitInfo = info as? GraphCommitInfo {
+                drawCommitPoint(point: depth2Position(depth_x: i, depth_y: index), color: info.color)
+                drawCommitText(commit: commitInfo.commit, depth_x: infos.count - 1, depth_y: index)
             }
-            if max_depth_y < info.depth_y {
-                max_depth_y = info.depth_y
+            for x in info.nextDepth_y {
+                drawLine(start: depth2Position(depth_x: i, depth_y: index), end: depth2Position(depth_x: x, depth_y: index + 1), color: .red)
             }
-            guard let commitInfo = info as? GraphCommitInfo else { continue }
-            drawCommitInfoText(graphCommitInfo: commitInfo)
         }
-        setContentViewSize(size: CGSize(width: max_depth_x * 50 + 540, height: max_depth_y * 200 + 200))
+    }
+    
+    func drawGraph(graphInfos infos: [[GraphInfo]]) {
+        var maxOneTimeInfoCount = 0
+        for (i, info) in infos.enumerated() {
+            if maxOneTimeInfoCount < info.count {
+                maxOneTimeInfoCount = info.count
+            }
+            drawOneTimeGraph(infos: info, index: i)
+        }
+        setContentViewSize(size: CGSize(width: maxOneTimeInfoCount * 50 + 540, height: infos.count * 40 + 200))
     }
     
     func setContentViewSize(size: CGSize) {
@@ -144,32 +136,131 @@ class ViewController: UIViewController {
         }
         return oid2Branch
     }
+
     
-    
-    func iterateCommit(repo: Repository) -> [GraphInfo] {
+    func constructGraphInfo(repo: Repository) -> [[GraphInfo]] {
+        
+        // Get a map [OID: Branch]
+        let branches = getOid2Branch(repo: repo)
         
         let head = repo.HEAD().flatMap { repo.commit($0.oid) }
-        var infos: [GraphInfo] = []
+        var infos: [[GraphInfo]] = []
         switch head {
         case let .success(commit):
             
             // Commit iterator
             let iter = CommitIterator(repo: repo, root: commit.oid.oid)
             
-            var currentDepth_y = 0
+            // HEAD initialization
+            let head = GraphCommitInfo(commit: commit, nextDepth_y: [0], color: .red)
+            infos.append([head])
             
-            //
+            // Next commit oid of depth_x in the iteration
+            var nexts: [OID] = []
+            
+            // Merge commit
+            if commit.parents.count == 2 {
+                let new1 = GraphInfo(nextDepth_y: [0], color: .blue)
+                let new2 = GraphInfo(nextDepth_y: [1], color: .blue)
+                infos.append([new1, new2])
+                nexts = [commit.parents.first!.oid, commit.parents.last!.oid]
+            } else if commit.parents.count == 1 {
+                let new1 = GraphInfo(nextDepth_y: [0], color: .blue)
+                infos.append([new1])
+                nexts = [commit.parents.first!.oid]
+            } else {
+                return infos
+            }
+            
+            
+            let _ = iter.next()
+            
+            var currentDepth_y = 1
+            
             while (true) {
                 let result = iter.next()
                 if result == nil {
                     break
                 }
+                assert(infos.count > currentDepth_y)
                 
                 switch result {
                 case let .success(commit):
                     // print("Commit: \(commit.message)")
-                    let commitInfo = GraphCommitInfo(commit: commit, depth_x: 0, depth_y: currentDepth_y, color: .red)
-                    infos.append(commitInfo)
+                    
+                    // Add commit infomation
+                    var commitDepth_y = -1
+                    for (i, next) in nexts.enumerated() {
+                        if next.description == commit.oid.description {
+                            assert(infos[currentDepth_y].count > i)
+                            
+                            infos[currentDepth_y][i] = GraphCommitInfo(commit: commit, nextDepth_y: [i], color: .red)
+                            commitDepth_y = i
+                            break
+                        }
+                    }
+                    
+                    if commitDepth_y < 0 {
+                        // Unmerged commit
+                        let new = GraphCommitInfo(commit: commit, nextDepth_y: [nexts.count], color: .red)
+                        infos[currentDepth_y].append(new)
+                        nexts.append(commit.oid)
+                        commitDepth_y = infos[currentDepth_y].count - 1
+                    } else {
+                        var new_i = commitDepth_y + 1
+                        var old_i = commitDepth_y + 1
+                        let count = nexts.count
+                        
+                        while old_i < count {
+                            
+                            infos[currentDepth_y][new_i].nextDepth_y[0] -= old_i - new_i
+                            
+                            // When create new branches
+                            if nexts[new_i].description == commit.oid.description {
+                                assert(infos[currentDepth_y - 1].count > old_i)
+                                infos[currentDepth_y - 1][old_i].nextDepth_y = [commitDepth_y]
+                                infos[currentDepth_y].remove(at: new_i)
+                                nexts.remove(at: new_i)
+                                old_i += 1
+                                continue
+                            }
+                            new_i += 1
+                            old_i += 1
+                        }
+                    }
+                    
+        
+                    // Add next information
+                    infos.append([])
+                    assert(infos.count > currentDepth_y + 1)
+                    for (i, info) in infos[currentDepth_y].enumerated() {
+                        // Update next infomation
+                        if i == commitDepth_y && commit.parents.count > 0 {
+                            nexts[i] = commit.parents.first!.oid
+                        }
+                        let new = GraphInfo(nextDepth_y: [i], color: .blue)
+                        infos[currentDepth_y + 1].append(new)
+                    }
+                    
+                    // Merge commit
+                    if commit.parents.count == 2 {
+                        let c = infos[currentDepth_y][commitDepth_y] as! GraphCommitInfo
+                        print(c.commit.message)
+                        if branches.keys.contains(commit.parents.last!.oid) {
+                            // New branch
+                            infos[currentDepth_y][commitDepth_y].nextDepth_y.append(nexts.count)
+                            let new = GraphInfo(nextDepth_y: [nexts.count], color: .blue)
+                            infos[currentDepth_y + 1].append(new)
+                            nexts.append(commit.parents.last!.oid)
+                        } else {
+                            for (i, next) in nexts.enumerated() {
+                                if next == commit.parents.last!.oid {
+                                    infos[currentDepth_y][commitDepth_y].nextDepth_y.append(i)
+                                    break
+                                }
+                            }
+                        }
+                    }
                     
                 case let .failure(error):
                     showErrorAlert(repoError: .iterateCommits)
@@ -210,8 +301,7 @@ class ViewController: UIViewController {
                     subview.removeFromSuperview()
                 }
                 headerTitle.title = inputText.components(separatedBy: "/").last?.components(separatedBy: ".").first ?? ""
-                let branches = getOid2Branch(repo: repo)
-                let infos = iterateCommit(repo: repo)
+                let infos = constructGraphInfo(repo: repo)
                 drawGraph(graphInfos: infos)
             case let .failure(error):
                 showErrorAlert(repoError: .clone)
