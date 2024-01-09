@@ -244,21 +244,19 @@ class ViewController: UIViewController {
                     
                     // Merge commit
                     if commit.parents.count == 2 {
-                        let c = infos[currentDepth_y][commitDepth_y] as! GraphCommitInfo
-                        print(c.commit.message)
-                        if branches.keys.contains(commit.parents.last!.oid) {
-                            // New branch
+                        var newBranch = true
+                        for (i, next) in nexts.enumerated() {
+                            if next == commit.parents.last!.oid {
+                                infos[currentDepth_y][commitDepth_y].nextDepth_y.append(i)
+                                newBranch = false
+                                break
+                            }
+                        }
+                        if newBranch {
                             infos[currentDepth_y][commitDepth_y].nextDepth_y.append(nexts.count)
                             let new = GraphInfo(nextDepth_y: [nexts.count], color: .blue)
                             infos[currentDepth_y + 1].append(new)
                             nexts.append(commit.parents.last!.oid)
-                        } else {
-                            for (i, next) in nexts.enumerated() {
-                                if next == commit.parents.last!.oid {
-                                    infos[currentDepth_y][commitDepth_y].nextDepth_y.append(i)
-                                    break
-                                }
-                            }
                         }
                     }
                     
