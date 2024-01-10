@@ -21,6 +21,9 @@
 		A36224C42B3B5A6A00DE8A0F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A36224C22B3B5A6A00DE8A0F /* Main.storyboard */; };
 		A36224C62B3B5A6C00DE8A0F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A36224C52B3B5A6C00DE8A0F /* Assets.xcassets */; };
 		A36224C92B3B5A6C00DE8A0F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A36224C72B3B5A6C00DE8A0F /* LaunchScreen.storyboard */; };
+		A3BE52B52B4F339E00AEA34C /* Graph.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BE52B42B4F339E00AEA34C /* Graph.swift */; };
+		A3BE52B72B4F38E900AEA34C /* IGitError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BE52B62B4F38E900AEA34C /* IGitError.swift */; };
+		A3BE52B92B4F3B9700AEA34C /* RepositoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3BE52B82B4F3B9700AEA34C /* RepositoryManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +43,9 @@
 		A36224C52B3B5A6C00DE8A0F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A36224C82B3B5A6C00DE8A0F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A36224CA2B3B5A6C00DE8A0F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A3BE52B42B4F339E00AEA34C /* Graph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Graph.swift; sourceTree = "<group>"; };
+		A3BE52B62B4F38E900AEA34C /* IGitError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IGitError.swift; sourceTree = "<group>"; };
+		A3BE52B82B4F3B9700AEA34C /* RepositoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +91,9 @@
 				A36224BC2B3B5A6A00DE8A0F /* AppDelegate.swift */,
 				A36224BE2B3B5A6A00DE8A0F /* SceneDelegate.swift */,
 				A35783292B3B6D5F00C11058 /* ViewController.swift */,
+				A3BE52B42B4F339E00AEA34C /* Graph.swift */,
+				A3BE52B82B4F3B9700AEA34C /* RepositoryManager.swift */,
+				A3BE52B62B4F38E900AEA34C /* IGitError.swift */,
 				A30419982B45C008009E4937 /* GraphInfo.swift */,
 				A304199A2B45C4CF009E4937 /* GraphCommitInfo.swift */,
 				A30419922B45BBAD009E4937 /* Line.swift */,
@@ -198,9 +207,12 @@
 				A30419952B45BC28009E4937 /* Circle.swift in Sources */,
 				A30419972B45BC8C009E4937 /* RoundedRectangle.swift in Sources */,
 				A357832A2B3B6D5F00C11058 /* ViewController.swift in Sources */,
+				A3BE52B52B4F339E00AEA34C /* Graph.swift in Sources */,
 				A30419932B45BBAD009E4937 /* Line.swift in Sources */,
 				A304199D2B45C97F009E4937 /* CGPointExt.swift in Sources */,
+				A3BE52B72B4F38E900AEA34C /* IGitError.swift in Sources */,
 				A36224BD2B3B5A6A00DE8A0F /* AppDelegate.swift in Sources */,
+				A3BE52B92B4F3B9700AEA34C /* RepositoryManager.swift in Sources */,
 				A36224BF2B3B5A6A00DE8A0F /* SceneDelegate.swift in Sources */,
 				A304199B2B45C4CF009E4937 /* GraphCommitInfo.swift in Sources */,
 			);
