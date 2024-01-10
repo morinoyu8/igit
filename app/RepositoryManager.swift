@@ -38,30 +38,31 @@ class RepositoryManager {
     
     static func clone(url: String) throws -> RepositoryManager {
         let fileManager = FileManager.default
+        guard let fromURL = URL(string: url) else {
+            print("URL Conversion Error")
+            throw IGitError.clone
+        }
+        
+        let toURL: URL
         do {
-            guard let fromURL = URL(string: url) else {
-                print("URL Conversion Error")
-                throw IGitError.clone
-            }
             let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-            let toURL = documentsURL.appendingPathComponent("git-test", isDirectory: true)
+            toURL = documentsURL.appendingPathComponent("git-test", isDirectory: true)
             
             if fileManager.fileExists(atPath: toURL.path, isDirectory: nil) {
                 try fileManager.removeItem(at: toURL)
             }
-            
-            let result = Repository.clone(from: fromURL, to: toURL)
-            switch result {
-            case let .success(repo):
-                return RepositoryManager(repo: repo)
-            case let .failure(error):
-                print("Clone error: \(error)")
-                throw IGitError.clone
-            }
-
         } catch {
             print("Get document folder error: \(error)")
             throw IGitError.getDocumentFolder
+        }
+        
+        let result = Repository.clone(from: fromURL, to: toURL)
+        switch result {
+        case let .success(repo):
+            return RepositoryManager(repo: repo)
+        case let .failure(error):
+            print("Clone error: \(error)")
+            throw IGitError.clone
         }
     }
 }
