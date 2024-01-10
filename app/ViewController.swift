@@ -242,8 +242,11 @@ class ViewController: UIViewController {
                         let count = nexts.count
                         
                         while old_i < count {
-                            
-                            infos[currentDepth_y][new_i].nextDepth_y[0] -= old_i - new_i
+                            if (infos[currentDepth_y - 1].count <= old_i) {
+                                break
+                            }
+                            infos[currentDepth_y - 1][old_i].nextDepth_y[0] = new_i
+                            infos[currentDepth_y][new_i].nextDepth_y[0] = new_i
                             
                             // When create new branches
                             if nexts[new_i].description == commit.oid.description {
