@@ -39,26 +39,27 @@ class Graph {
             endPoint = CGPoint(x: mergin, y: size.height - mergin)
         }
         
-        let line = Line(frame: CGRect(origin: origin, size: size), start: startPoint, end: endPoint, color: color, weight: 1.8)
+        let line = Line(frame: CGRect(origin: origin, size: size), start: startPoint, end: endPoint, color: color, weight: GraphConfig.lineWeight)
         parentView.view.addSubview(line)
         parentView.view.sendSubviewToBack(line)
     }
    
     // Draw a commit point
     private func drawCommitPoint(point: CGPoint, color: UIColor) {
-        let radius = 5
+        let radius = GraphConfig.commitPointRadius
         let circle = Circle(frame: CGRect(origin: point - CGPoint(x: radius, y: radius), size: CGSize(width: radius * 2, height: radius * 2)), arcCenter: CGPoint(x: radius, y: radius), radius: CGFloat(radius), color: color)
         parentView.view.addSubview(circle)
     }
     
     
     private func drawCommitText(commitInfo info: GraphCommitInfo, depth_x: Int, depth_y: Int) {
-        let width = 500
+        let width = GraphConfig.messageWidth
         let height = 30
-        let fontSize: CGFloat = 14
+        let origin_x = depth_x * GraphConfig.dist_x + GraphConfig.mergin_x + GraphConfig.distGraphAndMessage
+        let origin_y = depth_y * GraphConfig.dist_y + GraphConfig.mergin_y - height / 2
         
-        let message = UILabel(frame: CGRect(origin: CGPoint(x: depth_x * 50 + 50, y: depth_y * 50 + 35), size: CGSize(width: width, height: height)))
-        message.font = UIFont(name: "Menlo-Regular", size: fontSize)
+        let message = UILabel(frame: CGRect(origin: CGPoint(x: origin_x, y: origin_y), size: CGSize(width: width, height: height)))
+        message.font = UIFont(name: GraphConfig.fontName, size: GraphConfig.fontSize)
         
         var text = ""
         var refNameRange: [(Int, Int)] = []
@@ -81,7 +82,7 @@ class Graph {
         for range in refNameRange {
             attrText.addAttributes([
                     .foregroundColor: info.color,
-                    .font: UIFont(name: "Menlo-Bold", size: fontSize)!
+                    .font: UIFont(name: GraphConfig.boldFontName, size: GraphConfig.fontSize)!
             ], range: NSMakeRange(range.0, range.1))
         }
 
@@ -91,7 +92,7 @@ class Graph {
     }
     
     private func depth2Position(depth_x: Int, depth_y: Int) -> CGPoint {
-        return CGPoint(x: depth_x * 50 + 20, y: depth_y * 50 + 50)
+        return CGPoint(x: depth_x * GraphConfig.dist_x + GraphConfig.mergin_x, y: depth_y * GraphConfig.dist_y + GraphConfig.mergin_y)
     }
     
     private func drawOneTimeGraph(infos: [GraphInfo], index: Int) {
@@ -107,7 +108,6 @@ class Graph {
     }
     
     func draw() throws {
-        
         // Construct graph infos
         do {
             try construct()
@@ -122,7 +122,10 @@ class Graph {
             }
             drawOneTimeGraph(infos: info, index: i)
         }
-        setContentViewSize(size: CGSize(width: maxOneTimeInfoCount * 50 + 540, height: infos.count * 50 + 200))
+        
+        let viewWidth = maxOneTimeInfoCount * GraphConfig.dist_x + GraphConfig.distGraphAndMessage + GraphConfig.messageWidth + 2 * GraphConfig.mergin_x
+        let viewHeight = (infos.count - 1) * GraphConfig.dist_y + 2 * GraphConfig.mergin_y
+        setContentViewSize(size: CGSize(width: viewWidth, height: viewHeight))
     }
     
     private func setContentViewSize(size: CGSize) {
@@ -276,4 +279,34 @@ struct GraphView {
     let viewWidth: NSLayoutConstraint
     let viewHeight: NSLayoutConstraint
     let scrollViewHeight: NSLayoutConstraint
+}
+
+struct GraphConfig {
+    
+    // Mergin
+    static let mergin_x: Int = 30
+    static let mergin_y: Int = 30
+    
+    // Distance of graph
+    static let dist_x: Int = 30
+    static let dist_y: Int = 50
+    
+    // Radius of commit point
+    static let commitPointRadius: Int = 5
+    
+    // Distance between graph and commit messages
+    static let distGraphAndMessage: Int = 40
+    
+    // Width of commit messages
+    static let messageWidth: Int = 500
+    
+    // Font size of commit messages
+    static let fontSize: CGFloat = 14
+    
+    // Font of commit messages
+    static let fontName: String = "Menlo-Regular"
+    static let boldFontName: String = "Menlo-Bold"
+
+    // Line Weight
+    static let lineWeight: CGFloat = 1.8
 }
