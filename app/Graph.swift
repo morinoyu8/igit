@@ -52,13 +52,8 @@ class Graph {
     }
     
     
-    private func drawCommitText(commitInfo info: GraphCommitInfo, depth_x: Int, depth_y: Int) {
-        let width = GraphConfig.messageWidth
-        let height = 30
-        let origin_x = depth_x * GraphConfig.dist_x + GraphConfig.mergin_x + GraphConfig.distGraphAndMessage
-        let origin_y = depth_y * GraphConfig.dist_y + GraphConfig.mergin_y - height / 2
-        
-        let message = UILabel(frame: CGRect(origin: CGPoint(x: origin_x, y: origin_y), size: CGSize(width: width, height: height)))
+    private func drawCommitText(commitInfo info: GraphCommitInfo, point: CGPoint) {
+        let message = UILabel(frame: CGRect(origin: point, size: CGSize(width: GraphConfig.messageWidth, height: GraphConfig.messageHeight)))
         message.font = UIFont(name: GraphConfig.fontName, size: GraphConfig.fontSize)
         
         var text = ""
@@ -81,7 +76,7 @@ class Graph {
         let attrText = NSMutableAttributedString(string: text)
         for range in refNameRange {
             attrText.addAttributes([
-                    .foregroundColor: info.color,
+                .foregroundColor: GraphConfig.colors[info.colorIndex],
                     .font: UIFont(name: GraphConfig.boldFontName, size: GraphConfig.fontSize)!
             ], range: NSMakeRange(range.0, range.1))
         }
@@ -95,14 +90,34 @@ class Graph {
         return CGPoint(x: depth_x * GraphConfig.dist_x + GraphConfig.mergin_x, y: depth_y * GraphConfig.dist_y + GraphConfig.mergin_y)
     }
     
-    private func drawOneTimeGraph(infos: [GraphInfo], index: Int) {
-        for (i, info) in infos.enumerated() {
+    private func drawCommit(commitInfo info: GraphCommitInfo, depth_x: Int, depth_y: Int) {
+        let point = depth2Position(depth_x: depth_x, depth_y: depth_y)
+        let textPoint = depth2Position(depth_x: infos[depth_y].count - 1, depth_y: depth_y) + CGPoint(x: GraphConfig.distGraphAndMessage, y: -GraphConfig.messageHeight / 2)
+        drawCommitPoint(point: point, color: GraphConfig.colors[info.colorIndex])
+        drawCommitText(commitInfo: info, point: textPoint)
+    }
+    
+    private func drawOneTimeGraph(index: Int) {
+        // Draw commit points
+        for (i, info) in infos[index].enumerated() {
             if let commitInfo = info as? GraphCommitInfo {
-                drawCommitPoint(point: depth2Position(depth_x: i, depth_y: index), color: info.color)
-                drawCommitText(commitInfo: commitInfo, depth_x: infos.count - 1, depth_y: index)
+                drawCommit(commitInfo: commitInfo, depth_x: i, depth_y: index)
             }
-            for x in info.nextDepth_y {
-                drawLine(start: depth2Position(depth_x: i, depth_y: index), end: depth2Position(depth_x: x, depth_y: index + 1), color: .red)
+        }
+        
+        if index == infos.count - 1 {
+            return
+        }
+        
+        // Draw Line
+        for (i, info) in infos[index].enumerated() {
+            for next in info.nextDepth_y {
+                var color = GraphConfig.colors[info.colorIndex]
+                if i < next {
+                    color = GraphConfig.colors[infos[index + 1][next].colorIndex]
+                }
+                
+                drawLine(start: depth2Position(depth_x: i, depth_y: index), end: depth2Position(depth_x: next, depth_y: index + 1), color: color)
             }
         }
     }
@@ -116,11 +131,11 @@ class Graph {
         }
         
         var maxOneTimeInfoCount = 0
-        for (i, info) in infos.enumerated() {
-            if maxOneTimeInfoCount < info.count {
-                maxOneTimeInfoCount = info.count
+        for i in 0..<infos.count {
+            if maxOneTimeInfoCount < infos[i].count {
+                maxOneTimeInfoCount = infos[i].count
             }
-            drawOneTimeGraph(infos: info, index: i)
+            drawOneTimeGraph(index: i)
         }
         
         let viewWidth = maxOneTimeInfoCount * GraphConfig.dist_x + GraphConfig.distGraphAndMessage + GraphConfig.messageWidth + 2 * GraphConfig.mergin_x
@@ -134,11 +149,28 @@ class Graph {
         parentView.scrollViewHeight.constant = size.height
     }
     
+    // Update colorCount and return the color index of the new branch
+    private func newColor(colorCount: inout [Int]) -> Int {
+        assert(colorCount.count == GraphConfig.colors.count)
+        let min = colorCount.min()
+        var index = 0
+        for (i, x) in colorCount.enumerated() {
+            if x == min {
+                index = i
+                break
+            }
+        }
+        colorCount[index] += 1
+        return index
+    }
+    
+    
     private func construct() throws {
         let branches = repoManager.getOid2Branch()
         
         let head = repoManager.repo.HEAD().flatMap { repoManager.repo.commit($0.oid) }
         var infos: [[GraphInfo]] = []
+        var colorCount = Array<Int>(repeating: 0, count: GraphConfig.colors.count)
         
         switch head {
         case let .success(commit):
@@ -147,7 +179,7 @@ class Graph {
             let iter = CommitIterator(repo: repoManager.repo, root: commit.oid.oid)
             
             // HEAD initialization
-            let head = GraphCommitInfo(commit: commit, nextDepth_y: [0], color: .red)
+            let head = GraphCommitInfo(commit: commit, nextDepth_y: [0], colorIndex: newColor(colorCount: &colorCount))
             head.branches = branches[commit.oid] ?? []
             infos.append([head])
             
@@ -156,12 +188,12 @@ class Graph {
             
             // Merge commit
             if commit.parents.count == 2 {
-                let new1 = GraphInfo(nextDepth_y: [0], color: .blue)
-                let new2 = GraphInfo(nextDepth_y: [1], color: .blue)
+                let new1 = GraphInfo(nextDepth_y: [0], colorIndex: infos[0][0].colorIndex)
+                let new2 = GraphInfo(nextDepth_y: [1], colorIndex: newColor(colorCount: &colorCount))
                 infos.append([new1, new2])
                 nexts = [commit.parents.first!.oid, commit.parents.last!.oid]
             } else if commit.parents.count == 1 {
-                let new1 = GraphInfo(nextDepth_y: [0], color: .blue)
+                let new1 = GraphInfo(nextDepth_y: [0], colorIndex: infos[0][0].colorIndex)
                 infos.append([new1])
                 nexts = [commit.parents.first!.oid]
             }
@@ -171,12 +203,14 @@ class Graph {
             var currentDepth_y = 1
             
             while (true) {
+                print(colorCount)
                 let result = iter.next()
                 assert(infos.count > currentDepth_y)
+                var deletedColor = Array<Int>(repeating: 0, count: GraphConfig.colors.count)
                 
                 switch result {
                 case let .success(commit):
-                    print("Commit: \(commit.message)")
+                    // print("Commit: \(commit.message)")
                     
                     // Add commit infomation
                     var commitDepth_y = -1
@@ -184,7 +218,8 @@ class Graph {
                         if next.description == commit.oid.description {
                             assert(infos[currentDepth_y].count > i)
                             
-                            let new = GraphCommitInfo(commit: commit, nextDepth_y: [i], color: .red)
+                            let color = infos[currentDepth_y][i].colorIndex
+                            let new = GraphCommitInfo(commit: commit, nextDepth_y: [i], colorIndex: color)
                             new.branches = branches[commit.oid] ?? []
                             infos[currentDepth_y][i] = new
                             commitDepth_y = i
@@ -194,7 +229,7 @@ class Graph {
                     
                     if commitDepth_y < 0 {
                         // Unmerged commit
-                        let new = GraphCommitInfo(commit: commit, nextDepth_y: [nexts.count], color: .red)
+                        let new = GraphCommitInfo(commit: commit, nextDepth_y: [nexts.count], colorIndex: newColor(colorCount: &colorCount))
                         new.branches = branches[commit.oid] ?? []
                         infos[currentDepth_y].append(new)
                         nexts.append(commit.oid)
@@ -215,6 +250,7 @@ class Graph {
                             if nexts[new_i].description == commit.oid.description {
                                 assert(infos[currentDepth_y - 1].count > old_i)
                                 infos[currentDepth_y - 1][old_i].nextDepth_y = [commitDepth_y]
+                                deletedColor[infos[currentDepth_y][new_i].colorIndex] += 1
                                 infos[currentDepth_y].remove(at: new_i)
                                 nexts.remove(at: new_i)
                                 old_i += 1
@@ -234,7 +270,7 @@ class Graph {
                         if i == commitDepth_y && commit.parents.count > 0 {
                             nexts[i] = commit.parents.first!.oid
                         }
-                        let new = GraphInfo(nextDepth_y: [i], color: .blue)
+                        let new = GraphInfo(nextDepth_y: [i], colorIndex: info.colorIndex)
                         infos[currentDepth_y + 1].append(new)
                     }
                     
@@ -250,10 +286,15 @@ class Graph {
                         }
                         if newBranch {
                             infos[currentDepth_y][commitDepth_y].nextDepth_y.append(nexts.count)
-                            let new = GraphInfo(nextDepth_y: [nexts.count], color: .blue)
+                            let new = GraphInfo(nextDepth_y: [nexts.count], colorIndex: newColor(colorCount: &colorCount))
                             infos[currentDepth_y + 1].append(new)
                             nexts.append(commit.parents.last!.oid)
                         }
+                    }
+                    
+                    // Color Setting
+                    for i in 0..<colorCount.count {
+                        colorCount[i] -= deletedColor[i]
                     }
                     
                 case let .failure(error):
@@ -297,8 +338,9 @@ struct GraphConfig {
     // Distance between graph and commit messages
     static let distGraphAndMessage: Int = 40
     
-    // Width of commit messages
+    // Size of commit messages
     static let messageWidth: Int = 500
+    static let messageHeight: Int = 30
     
     // Font size of commit messages
     static let fontSize: CGFloat = 14
@@ -309,4 +351,23 @@ struct GraphConfig {
 
     // Line Weight
     static let lineWeight: CGFloat = 1.8
+    
+    static let colors: [UIColor] = [
+        color(red:   4, green: 133, blue: 218),
+        color(red: 218, green:   0, blue: 143),
+        color(red:   0, green: 218, blue:   8),
+        color(red: 218, green: 133, blue:   0),
+        color(red: 163, green:   0, blue: 217),
+        color(red: 255, green:   1, blue:   0),
+        color(red:   0, green: 218, blue: 204),
+        color(red: 225, green:  55, blue: 233),
+        color(red: 133, green: 218, blue:   0),
+        color(red: 221, green:  91, blue:  35),
+        color(red: 111, green:  35, blue: 214),
+        color(red: 255, green: 204, blue:   3)
+    ]
+    
+    static private func color(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
+        return UIColor(red: red / 255, green: green / 255, blue: blue / 255, alpha: 1)
+    }
 }

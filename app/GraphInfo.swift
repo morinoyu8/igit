@@ -12,11 +12,11 @@ class GraphInfo {
     // Next
     var nextDepth_y: [Int] = []
     
-    // The color of this graph.
-    let color: UIColor
+    // The color index of GraphConfig.colors
+    let colorIndex: Int
     
-    init(nextDepth_y: [Int], color: UIColor) {
+    init(nextDepth_y: [Int], colorIndex: Int) {
         self.nextDepth_y = nextDepth_y
-        self.color = color
+        self.colorIndex = colorIndex
     }
 }
