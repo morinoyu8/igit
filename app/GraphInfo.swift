@@ -10,13 +10,13 @@ import UIKit
 class GraphInfo {
     
     // Next
-    var nextDepth_y: [Int] = []
+    var nextDepth_x: [Int] = []
     
     // The color index of GraphConfig.colors
     let colorIndex: Int
     
-    init(nextDepth_y: [Int], colorIndex: Int) {
-        self.nextDepth_y = nextDepth_y
+    init(nextDepth_x: [Int], colorIndex: Int) {
+        self.nextDepth_x = nextDepth_x
         self.colorIndex = colorIndex
     }
 }

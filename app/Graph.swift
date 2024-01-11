@@ -57,7 +57,7 @@ class Graph {
         message.font = UIFont(name: GraphConfig.fontName, size: GraphConfig.fontSize)
         
         var text = ""
-        var refNameRange: [(Int, Int)] = []
+        var refNameRange: [(start: Int, end: Int)] = []
         if info.branches.count > 0 {
             text = "( "
             var refNameLength = 2
@@ -78,7 +78,7 @@ class Graph {
             attrText.addAttributes([
                 .foregroundColor: GraphConfig.colors[info.colorIndex],
                     .font: UIFont(name: GraphConfig.boldFontName, size: GraphConfig.fontSize)!
-            ], range: NSMakeRange(range.0, range.1))
+            ], range: NSMakeRange(range.start, range.end))
         }
 
         message.attributedText = attrText
@@ -97,25 +97,23 @@ class Graph {
         drawCommitText(commitInfo: info, point: textPoint)
     }
     
-    private func drawOneTimeGraph(index: Int) {
+    private func drawOneTimeGraph(depth_y: Int) {
         // Draw commit points
-        for (i, info) in infos[index].enumerated() {
+        for (depth_x, info) in infos[depth_y].enumerated() {
             if let commitInfo = info as? GraphCommitInfo {
-                print(commitInfo.commit.message)
-                print(commitInfo.nextDepth_y)
-                drawCommit(commitInfo: commitInfo, depth_x: i, depth_y: index)
+                drawCommit(commitInfo: commitInfo, depth_x: depth_x, depth_y: depth_y)
             }
         }
         
         // Draw Line
-        for (i, info) in infos[index].enumerated() {
-            for next in info.nextDepth_y {
+        for (depth_x, info) in infos[depth_y].enumerated() {
+            for next in info.nextDepth_x {
                 var color = GraphConfig.colors[info.colorIndex]
-                if i < next {
-                    color = GraphConfig.colors[infos[index + 1][next].colorIndex]
+                if depth_x < next {
+                    color = GraphConfig.colors[infos[depth_y + 1][next].colorIndex]
                 }
                 
-                drawLine(start: depth2Position(depth_x: i, depth_y: index), end: depth2Position(depth_x: next, depth_y: index + 1), color: color)
+                drawLine(start: depth2Position(depth_x: depth_x, depth_y: depth_y), end: depth2Position(depth_x: next, depth_y: depth_y + 1), color: color)
             }
         }
     }
@@ -131,11 +129,11 @@ class Graph {
         parentView.deleteGraph()
         
         var maxOneTimeInfoCount = 0
-        for i in 0..<infos.count {
-            if maxOneTimeInfoCount < infos[i].count {
-                maxOneTimeInfoCount = infos[i].count
+        for depth_y in 0..<infos.count {
+            if maxOneTimeInfoCount < infos[depth_y].count {
+                maxOneTimeInfoCount = infos[depth_y].count
             }
-            drawOneTimeGraph(index: i)
+            drawOneTimeGraph(depth_y: depth_y)
         }
         
         let viewWidth = maxOneTimeInfoCount * GraphConfig.dist_x + GraphConfig.distGraphAndMessage + GraphConfig.messageWidth + 2 * GraphConfig.mergin_x
@@ -179,7 +177,7 @@ class Graph {
             let iter = CommitIterator(repo: repoManager.repo, root: commit.oid.oid)
             
             // HEAD initialization
-            let head = GraphCommitInfo(commit: commit, nextDepth_y: [0], colorIndex: newColor(colorCount: &colorCount))
+            let head = GraphCommitInfo(commit: commit, nextDepth_x: [0], colorIndex: newColor(colorCount: &colorCount))
             head.branches = branches[commit.oid] ?? []
             infos.append([head])
             
@@ -188,12 +186,12 @@ class Graph {
             
             // Merge commit
             if commit.parents.count == 2 {
-                let new1 = GraphInfo(nextDepth_y: [0], colorIndex: infos[0][0].colorIndex)
-                let new2 = GraphInfo(nextDepth_y: [1], colorIndex: newColor(colorCount: &colorCount))
+                let new1 = GraphInfo(nextDepth_x: [0], colorIndex: infos[0][0].colorIndex)
+                let new2 = GraphInfo(nextDepth_x: [1], colorIndex: newColor(colorCount: &colorCount))
                 infos.append([new1, new2])
                 nexts = [commit.parents.first!.oid, commit.parents.last!.oid]
             } else if commit.parents.count == 1 {
-                let new1 = GraphInfo(nextDepth_y: [0], colorIndex: infos[0][0].colorIndex)
+                let new1 = GraphInfo(nextDepth_x: [0], colorIndex: infos[0][0].colorIndex)
                 infos.append([new1])
                 nexts = [commit.parents.first!.oid]
             }
@@ -219,7 +217,7 @@ class Graph {
                             assert(infos[currentDepth_y].count > i)
                             
                             let color = infos[currentDepth_y][i].colorIndex
-                            let new = GraphCommitInfo(commit: commit, nextDepth_y: [i], colorIndex: color)
+                            let new = GraphCommitInfo(commit: commit, nextDepth_x: [i], colorIndex: color)
                             new.branches = branches[commit.oid] ?? []
                             infos[currentDepth_y][i] = new
                             commitDepth_y = i
@@ -229,7 +227,7 @@ class Graph {
                     
                     if commitDepth_y < 0 {
                         // Unmerged commit
-                        let new = GraphCommitInfo(commit: commit, nextDepth_y: [nexts.count], colorIndex: newColor(colorCount: &colorCount))
+                        let new = GraphCommitInfo(commit: commit, nextDepth_x: [nexts.count], colorIndex: newColor(colorCount: &colorCount))
                         new.branches = branches[commit.oid] ?? []
                         infos[currentDepth_y].append(new)
                         nexts.append(commit.oid)
@@ -243,13 +241,13 @@ class Graph {
                             if (infos[currentDepth_y - 1].count <= old_i) {
                                 break
                             }
-                            infos[currentDepth_y - 1][old_i].nextDepth_y[0] = new_i
-                            infos[currentDepth_y][new_i].nextDepth_y[0] = new_i
+                            infos[currentDepth_y - 1][old_i].nextDepth_x[0] = new_i
+                            infos[currentDepth_y][new_i].nextDepth_x[0] = new_i
                             
                             // When create new branches
                             if nexts[new_i].description == commit.oid.description {
                                 assert(infos[currentDepth_y - 1].count > old_i)
-                                infos[currentDepth_y - 1][old_i].nextDepth_y = [commitDepth_y]
+                                infos[currentDepth_y - 1][old_i].nextDepth_x = [commitDepth_y]
                                 deletedColor[infos[currentDepth_y][new_i].colorIndex] += 1
                                 infos[currentDepth_y].remove(at: new_i)
                                 nexts.remove(at: new_i)
@@ -270,7 +268,7 @@ class Graph {
                         if i == commitDepth_y && commit.parents.count > 0 {
                             nexts[i] = commit.parents.first!.oid
                         }
-                        let new = GraphInfo(nextDepth_y: [i], colorIndex: info.colorIndex)
+                        let new = GraphInfo(nextDepth_x: [i], colorIndex: info.colorIndex)
                         infos[currentDepth_y + 1].append(new)
                     }
                     
@@ -279,14 +277,14 @@ class Graph {
                         var newBranch = true
                         for (i, next) in nexts.enumerated() {
                             if next == commit.parents.last!.oid {
-                                infos[currentDepth_y][commitDepth_y].nextDepth_y.append(i)
+                                infos[currentDepth_y][commitDepth_y].nextDepth_x.append(i)
                                 newBranch = false
                                 break
                             }
                         }
                         if newBranch {
-                            infos[currentDepth_y][commitDepth_y].nextDepth_y.append(nexts.count)
-                            let new = GraphInfo(nextDepth_y: [nexts.count], colorIndex: newColor(colorCount: &colorCount))
+                            infos[currentDepth_y][commitDepth_y].nextDepth_x.append(nexts.count)
+                            let new = GraphInfo(nextDepth_x: [nexts.count], colorIndex: newColor(colorCount: &colorCount))
                             infos[currentDepth_y + 1].append(new)
                             nexts.append(commit.parents.last!.oid)
                         }
@@ -305,7 +303,7 @@ class Graph {
                     infos.removeLast()
                     if infos.count > 0 {
                         for info in infos[infos.count - 1] {
-                            info.nextDepth_y = []
+                            info.nextDepth_x = []
                         }
                     }
                     self.infos = infos

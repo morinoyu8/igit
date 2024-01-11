@@ -16,8 +16,8 @@ class GraphCommitInfo: GraphInfo {
     // Branches
     var branches: [Branch] = []
     
-    init(commit: Commit, nextDepth_y: [Int], colorIndex: Int) {
+    init(commit: Commit, nextDepth_x: [Int], colorIndex: Int) {
         self.commit = commit
-        super.init(nextDepth_y: nextDepth_y, colorIndex: colorIndex)
+        super.init(nextDepth_x: nextDepth_x, colorIndex: colorIndex)
     }
 }
