@@ -50,6 +50,7 @@ class ViewController: UIViewController {
     func cloneRepositoryAndDrawGraph(url: String) {
         do {
             let repo = try RepositoryManager.clone(url: url)
+            headerTitle.title = url.components(separatedBy: "/").last?.components(separatedBy: ".").first ?? ""
             drawGraph(repo: repo)
         } catch {
             if let iGitError = error as? IGitError {
