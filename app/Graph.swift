@@ -101,12 +101,10 @@ class Graph {
         // Draw commit points
         for (i, info) in infos[index].enumerated() {
             if let commitInfo = info as? GraphCommitInfo {
+                print(commitInfo.commit.message)
+                print(commitInfo.nextDepth_y)
                 drawCommit(commitInfo: commitInfo, depth_x: i, depth_y: index)
             }
-        }
-        
-        if index == infos.count - 1 {
-            return
         }
         
         // Draw Line
@@ -301,6 +299,13 @@ class Graph {
                     print("Commit iteration error: \(error)")
                     throw IGitError.iterateCommits
                 case .none:
+                    // Remove unnecessary informatiion
+                    infos.removeLast()
+                    if infos.count > 0 {
+                        for info in infos[infos.count - 1] {
+                            info.nextDepth_y = []
+                        }
+                    }
                     self.infos = infos
                     return
                 }
