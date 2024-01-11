@@ -10,7 +10,6 @@
 		A30419902B45BAAE009E4937 /* SwiftGit2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A304198F2B45BAAE009E4937 /* SwiftGit2.framework */; };
 		A30419932B45BBAD009E4937 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419922B45BBAD009E4937 /* Line.swift */; };
 		A30419952B45BC28009E4937 /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419942B45BC28009E4937 /* Circle.swift */; };
-		A30419972B45BC8C009E4937 /* RoundedRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419962B45BC8C009E4937 /* RoundedRectangle.swift */; };
 		A30419992B45C008009E4937 /* GraphInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30419982B45C008009E4937 /* GraphInfo.swift */; };
 		A304199B2B45C4CF009E4937 /* GraphCommitInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A304199A2B45C4CF009E4937 /* GraphCommitInfo.swift */; };
 		A304199D2B45C97F009E4937 /* CGPointExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = A304199C2B45C97F009E4937 /* CGPointExt.swift */; };
@@ -30,7 +29,6 @@
 		A304198F2B45BAAE009E4937 /* SwiftGit2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftGit2.framework; path = Carthage/Build/iOS/SwiftGit2.framework; sourceTree = "<group>"; };
 		A30419922B45BBAD009E4937 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		A30419942B45BC28009E4937 /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
-		A30419962B45BC8C009E4937 /* RoundedRectangle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectangle.swift; sourceTree = "<group>"; };
 		A30419982B45C008009E4937 /* GraphInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphInfo.swift; sourceTree = "<group>"; };
 		A304199A2B45C4CF009E4937 /* GraphCommitInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphCommitInfo.swift; sourceTree = "<group>"; };
 		A304199C2B45C97F009E4937 /* CGPointExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExt.swift; sourceTree = "<group>"; };
@@ -98,7 +96,6 @@
 				A304199A2B45C4CF009E4937 /* GraphCommitInfo.swift */,
 				A30419922B45BBAD009E4937 /* Line.swift */,
 				A30419942B45BC28009E4937 /* Circle.swift */,
-				A30419962B45BC8C009E4937 /* RoundedRectangle.swift */,
 				A304199C2B45C97F009E4937 /* CGPointExt.swift */,
 				A36224C22B3B5A6A00DE8A0F /* Main.storyboard */,
 				A36224C52B3B5A6C00DE8A0F /* Assets.xcassets */,
@@ -205,7 +202,6 @@
 			files = (
 				A30419992B45C008009E4937 /* GraphInfo.swift in Sources */,
 				A30419952B45BC28009E4937 /* Circle.swift in Sources */,
-				A30419972B45BC8C009E4937 /* RoundedRectangle.swift in Sources */,
 				A357832A2B3B6D5F00C11058 /* ViewController.swift in Sources */,
 				A3BE52B52B4F339E00AEA34C /* Graph.swift in Sources */,
 				A30419932B45BBAD009E4937 /* Line.swift in Sources */,
