@@ -194,6 +194,10 @@ class Graph {
                 let new1 = GraphInfo(nextDepth_x: [0], colorIndex: infos[0][0].colorIndex)
                 infos.append([new1])
                 nexts = [commit.parents.first!.oid]
+            } else {
+                infos[0][0].nextDepth_x = []
+                self.infos = infos
+                return
             }
             
             let _ = iter.next()
