@@ -128,6 +128,8 @@ class Graph {
             throw error
         }
         
+        parentView.deleteGraph()
+        
         var maxOneTimeInfoCount = 0
         for i in 0..<infos.count {
             if maxOneTimeInfoCount < infos[i].count {
@@ -325,6 +327,12 @@ struct GraphView {
     let viewWidth: NSLayoutConstraint
     let viewHeight: NSLayoutConstraint
     let scrollViewHeight: NSLayoutConstraint
+    
+    func deleteGraph() {
+        for subview in self.view.subviews {
+            subview.removeFromSuperview()
+        }
+    }
 }
 
 struct GraphConfig {
