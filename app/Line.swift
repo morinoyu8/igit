@@ -30,7 +30,14 @@ class Line: UIView {
     override func draw(_ rect: CGRect) {
         let line = UIBezierPath()
         line.move(to: start)
-        line.addLine(to: end)
+        if start.x == end.x {
+            line.addLine(to: end)
+        } else {
+            let diff_y = end.y - start.y
+            let cp1 = CGPoint(x: start.x, y: start.y + diff_y * 2 / 3)
+            let cp2 = CGPoint(x: end.x, y: start.y + diff_y * 1 / 3)
+            line.addCurve(to: end, controlPoint1: cp1, controlPoint2: cp2)
+        }
         color.setStroke()
         line.lineWidth = weight
         line.stroke()
