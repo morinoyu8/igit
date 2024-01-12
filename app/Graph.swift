@@ -109,7 +109,7 @@ class Graph {
         for (depth_x, info) in infos[depth_y].enumerated() {
             for next in info.nextDepth_x {
                 var color = GraphConfig.colors[info.colorIndex]
-                if depth_x < next {
+                if depth_x < next && next < infos[depth_y + 1].count {
                     color = GraphConfig.colors[infos[depth_y + 1][next].colorIndex]
                 }
                 
