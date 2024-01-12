@@ -126,6 +126,7 @@ class Graph {
             throw error
         }
         
+        print("Graph construction done.")
         parentView.deleteGraph()
         
         var maxOneTimeInfoCount = 0
@@ -205,7 +206,6 @@ class Graph {
             var currentDepth_y = 1
             
             while (true) {
-                print(colorCount)
                 let result = iter.next()
                 assert(infos.count > currentDepth_y)
                 var deletedColor = Array<Int>(repeating: 0, count: GraphConfig.colors.count)
