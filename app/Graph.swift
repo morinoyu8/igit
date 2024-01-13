@@ -190,6 +190,7 @@ class Graph {
                 let new1 = GraphInfo(nextDepth_x: [0], colorIndex: infos[0][0].colorIndex)
                 let new2 = GraphInfo(nextDepth_x: [1], colorIndex: newColor(colorCount: &colorCount))
                 infos.append([new1, new2])
+                head.nextDepth_x.append(1)
                 nexts = [commit.parents.first!.oid, commit.parents.last!.oid]
             } else if commit.parents.count == 1 {
                 let new1 = GraphInfo(nextDepth_x: [0], colorIndex: infos[0][0].colorIndex)
