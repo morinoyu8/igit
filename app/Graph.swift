@@ -29,14 +29,14 @@ class Graph {
     
     // Draw a line connecting commits
     private func drawLine(start: CGPoint, end: CGPoint, color: UIColor) {
-        let mergin: CGFloat = 5
-        let origin = CGPoint(x: min(start.x, end.x) - mergin, y: min(start.y, end.y) - mergin)
-        let size = CGSize(width: max(start.x, end.x) - min(start.x, end.x) + 2 * mergin, height: end.y - start.y + 2 * mergin)
-        var startPoint: CGPoint = CGPoint(x: mergin, y: mergin)
-        var endPoint: CGPoint = CGPoint(x: size.width - mergin, y: size.height - mergin)
+        let margin: CGFloat = 5
+        let origin = CGPoint(x: min(start.x, end.x) - margin, y: min(start.y, end.y) - margin)
+        let size = CGSize(width: max(start.x, end.x) - min(start.x, end.x) + 2 * margin, height: end.y - start.y + 2 * margin)
+        var startPoint: CGPoint = CGPoint(x: margin, y: margin)
+        var endPoint: CGPoint = CGPoint(x: size.width - margin, y: size.height - margin)
         if end.x - start.x < 0 {
-            startPoint = CGPoint(x: size.width - mergin, y: mergin)
-            endPoint = CGPoint(x: mergin, y: size.height - mergin)
+            startPoint = CGPoint(x: size.width - margin, y: margin)
+            endPoint = CGPoint(x: margin, y: size.height - margin)
         }
         
         let line = Line(frame: CGRect(origin: origin, size: size), start: startPoint, end: endPoint, color: color, weight: GraphConfig.lineWeight)
@@ -87,7 +87,7 @@ class Graph {
     }
     
     private func depth2Position(depth_x: Int, depth_y: Int) -> CGPoint {
-        return CGPoint(x: depth_x * GraphConfig.dist_x + GraphConfig.mergin_x, y: depth_y * GraphConfig.dist_y + GraphConfig.mergin_y)
+        return CGPoint(x: depth_x * GraphConfig.dist_x + GraphConfig.margin_x, y: depth_y * GraphConfig.dist_y + GraphConfig.margin_y)
     }
     
     private func drawCommit(commitInfo info: GraphCommitInfo, depth_x: Int, depth_y: Int) {
@@ -121,7 +121,7 @@ class Graph {
     func draw() throws {
         // Construct graph infos
         do {
-            try construct()
+            try constructGraphInfo()
         } catch {
             throw error
         }
@@ -137,8 +137,8 @@ class Graph {
             drawOneTimeGraph(depth_y: depth_y)
         }
         
-        let viewWidth = maxOneTimeInfoCount * GraphConfig.dist_x + GraphConfig.distGraphAndMessage + GraphConfig.messageWidth + 2 * GraphConfig.mergin_x
-        let viewHeight = (infos.count - 1) * GraphConfig.dist_y + 2 * GraphConfig.mergin_y
+        let viewWidth = maxOneTimeInfoCount * GraphConfig.dist_x + GraphConfig.distGraphAndMessage + GraphConfig.messageWidth + 2 * GraphConfig.margin_x
+        let viewHeight = (infos.count - 1) * GraphConfig.dist_y + 2 * GraphConfig.margin_y
         setContentViewSize(size: CGSize(width: viewWidth, height: viewHeight))
     }
     
@@ -164,7 +164,7 @@ class Graph {
     }
     
     
-    private func construct() throws {
+    private func constructGraphInfo() throws {
         let branches = repoManager.getOid2Branch()
         
         let head = repoManager.repo.HEAD().flatMap { repoManager.repo.commit($0.oid) }
@@ -339,9 +339,9 @@ struct GraphView {
 
 struct GraphConfig {
     
-    // Mergin
-    static let mergin_x: Int = 30
-    static let mergin_y: Int = 30
+    // margin
+    static let margin_x: Int = 30
+    static let margin_y: Int = 30
     
     // Distance of graph
     static let dist_x: Int = 30
