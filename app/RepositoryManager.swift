@@ -56,7 +56,7 @@ class RepositoryManager {
             throw IGitError.getDocumentFolder
         }
         
-        let result = Repository.clone(from: fromURL, to: toURL)
+        let result = Repository.clone(from: fromURL, to: toURL, bare: true)
         switch result {
         case let .success(repo):
             return RepositoryManager(repo: repo)
