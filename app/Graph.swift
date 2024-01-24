@@ -175,7 +175,7 @@ class Graph {
         case let .success(commit):
             
             // Commit iterator
-            let iter = CommitIterator(repo: repoManager.repo, root: commit.oid.oid)
+            let iter = repoManager.repo.commits(from: commit.oid)
             
             // HEAD initialization
             let head = GraphCommitInfo(commit: commit, nextDepth_x: [0], colorIndex: newColor(colorCount: &colorCount))
